@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Key : MonoBehaviour
 {
@@ -10,11 +11,12 @@ public class Key : MonoBehaviour
     [SerializeField] private float _timeToExplode;
     private float _explosionTimer;
 
-    [SerializeField] private GameObject highlight;
+    private Image _highlight;
     [SerializeField] private KeyCode m_keyCode;
 
     private void Awake()
     {
+        _highlight = transform.GetChild(1).GetChild(0).GetComponent<Image>();
         _explosionTimer = _timeToExplode;
 
         if (m_keyCode == KeyCode.None)
@@ -26,13 +28,9 @@ public class Key : MonoBehaviour
         
     }
 
-    private void FillHighlight(bool isButtonPressed)
-    {
-        highlight.SetActive(isButtonPressed);
-    }
-
     private void Update()
     {
+        _highlight.fillAmount = 1 - _explosionTimer / _timeToExplode;
         if (Input.GetKey(m_keyCode))
         {
             _explosionTimer -= Time.deltaTime;
@@ -44,11 +42,11 @@ public class Key : MonoBehaviour
 
         if (_explosionTimer <= 0)
         {
-            Explode();
+            StartCoroutine(Explode());
         }
     }
 
-    private void Explode()
+    private IEnumerator Explode()
     {
         Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, _explosionRange);
         foreach (Collider2D collider in colliders)
@@ -60,6 +58,7 @@ public class Key : MonoBehaviour
                 rigidbody2D.AddForce(direction * _explosionForce);
             }
         }
+        yield return new WaitForSeconds(0.1f);
         Destroy(gameObject);
     }
 
