@@ -55,6 +55,7 @@ public class HighlightKeys : MonoBehaviour
     }
     private void Update()
     {
+        /*
         foreach (KeyCode keyCode in KeyType.GetValues(typeof(KeyType)))
         {
             GameObject keyObject = GameObject.Find(keyCode.ToString());
@@ -63,6 +64,6 @@ public class HighlightKeys : MonoBehaviour
                 Key key = keyObject.GetComponent<Key>();
                 key.Highlight(Input.GetKey(keyCode));
             }
-        }
+        }*/
     }
 }
